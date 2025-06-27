@@ -1,6 +1,6 @@
-# Sistema de Gestão Interna - Makro Engenharia
+# Sistema de Gestão Interna - Makro Transportes
 
-Este repositório contém o código-fonte do **sistema web de gestão interna** desenvolvido para atender às necessidades operacionais da empresa **Makro Engenharia**.
+Este repositório contém o código-fonte do **sistema web de gestão interna** desenvolvido para atender às necessidades operacionais da empresa **Makro Transportes**.
 
 ## 📋 Descrição
 
@@ -27,7 +27,7 @@ O sistema é publicado automaticamente via GitHub no [Render.com](https://render
 
 ## 👨‍💻 Desenvolvedor
 
-Desenvolvido por [Francisco Erick de Oliveira Sousa](https://github.com/feos96) para uso interno da Makro Engenharia.
+Desenvolvido por [Francisco Erick de Oliveira Sousa](https://github.com/feos96) para uso interno da Makro Transportes.
 
 ---
 
