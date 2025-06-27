@@ -1,11 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, send_file
 import sqlite3
 import os
 from datetime import datetime
 import pandas as pd
 
 app = Flask(__name__)
-app.secret_key = 'sua_chave_supersecreta'
+app.secret_key = 'makrotransportes987654321'
 
 # -------------------- Banco de Dados --------------------
 
@@ -13,7 +13,7 @@ def init_db():
     conn = sqlite3.connect('manifestos.db')
     cursor = conn.cursor()
 
-    # Criação da tabela se não existir
+    # Tabela de Manifestos
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS manifestos (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,11 +30,53 @@ def init_db():
         );
     ''')
 
-    # Verifica se a coluna 'encerrado_por' existe (caso banco antigo)
-    try:
-        cursor.execute("SELECT encerrado_por FROM manifestos LIMIT 1")
-    except sqlite3.OperationalError:
-        cursor.execute("ALTER TABLE manifestos ADD COLUMN encerrado_por TEXT")
+    # Usuários
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS usuarios (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT NOT NULL,
+            matricula TEXT,
+            email TEXT UNIQUE NOT NULL,
+            senha TEXT NOT NULL
+        );
+    ''')
+
+    # Frotas
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS frotas (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            identificador TEXT NOT NULL,
+            modelo TEXT,
+            placa TEXT UNIQUE,
+            status TEXT
+        );
+    ''')
+
+    # Motoristas
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS motoristas (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT NOT NULL,
+            cpf TEXT UNIQUE,
+            telefone TEXT,
+            cnh TEXT,
+            validade_cnh TEXT
+        );
+    ''')
+
+    # Programação
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS programacao (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            data TEXT,
+            frota_id INTEGER,
+            motorista_id INTEGER,
+            destino TEXT,
+            observacoes TEXT,
+            FOREIGN KEY (frota_id) REFERENCES frotas(id),
+            FOREIGN KEY (motorista_id) REFERENCES motoristas(id)
+        );
+    ''')
 
     conn.commit()
     conn.close()
@@ -46,17 +88,19 @@ def get_conn():
 
 init_db()
 
-# -------------------- Usuários (Simulado) --------------------
-
-usuarios = {}
+# -------------------- Autenticação --------------------
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         email = request.form['email']
         senha = request.form['senha']
-        if email in usuarios and usuarios[email]['senha'] == senha:
-            session['usuario'] = usuarios[email]['nome']
+        conn = get_conn()
+        user = conn.execute('SELECT * FROM usuarios WHERE email = ? AND senha = ?', (email, senha)).fetchone()
+        conn.close()
+        if user:
+            session['usuario'] = user['nome']
+            session['usuario_id'] = user['id']
             return redirect(url_for('index'))
         flash('E-mail ou senha inválidos!', 'danger')
     return render_template('login.html')
@@ -80,17 +124,19 @@ def register():
             flash('As senhas não coincidem.', 'danger')
             return redirect(url_for('register'))
 
-        if email in usuarios:
+        try:
+            conn = get_conn()
+            conn.execute('''
+                INSERT INTO usuarios (nome, matricula, email, senha)
+                VALUES (?, ?, ?, ?)
+            ''', (nome, matricula, email, senha))
+            conn.commit()
+            conn.close()
+            flash('Cadastro realizado com sucesso. Faça login.', 'success')
+            return redirect(url_for('login'))
+        except sqlite3.IntegrityError:
             flash('Este e-mail já está registrado.', 'warning')
             return redirect(url_for('register'))
-
-        usuarios[email] = {
-            'nome': nome,
-            'matricula': matricula,
-            'senha': senha
-        }
-        flash('Cadastro realizado com sucesso. Faça login.', 'success')
-        return redirect(url_for('login'))
 
     return render_template('register.html')
 
@@ -106,25 +152,41 @@ def index():
 def frotas():
     if 'usuario' not in session:
         return redirect(url_for('login'))
-    return render_template('frotas.html')
+
+    conn = get_conn()
+    frotas = conn.execute('SELECT * FROM frotas').fetchall()
+    conn.close()
+    return render_template('frotas.html', frotas=frotas)
 
 @app.route('/motoristas')
 def motoristas():
     if 'usuario' not in session:
         return redirect(url_for('login'))
-    return render_template('motoristas.html')
+
+    conn = get_conn()
+    motoristas = conn.execute('SELECT * FROM motoristas').fetchall()
+    conn.close()
+    return render_template('motoristas.html', motoristas=motoristas)
 
 @app.route('/programacao')
 def programacao():
     if 'usuario' not in session:
         return redirect(url_for('login'))
-    return render_template('programacao.html')
+
+    conn = get_conn()
+    programacoes = conn.execute('''
+        SELECT p.*, f.identificador AS frota, m.nome AS motorista
+        FROM programacao p
+        LEFT JOIN frotas f ON p.frota_id = f.id
+        LEFT JOIN motoristas m ON p.motorista_id = m.id
+        ORDER BY p.data DESC
+    ''').fetchall()
+    conn.close()
+    return render_template('programacao.html', programacoes=programacoes)
 
 @app.route('/historico')
 def historico():
-    if 'usuario' not in session:
-        return redirect(url_for('login'))
-    return render_template('historico.html')
+    return redirect(url_for('programacao'))
 
 @app.route('/localizacao')
 def localizacao():
@@ -174,7 +236,7 @@ def novo_manifesto():
                 filial, origem, destino, data_transmissao, data_encerramento, encerrado_por
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', (
-            f['conjunto'], f['numero_manifesto'], f['rota'], 'Aberto',  # Status fixo
+            f['conjunto'], f['numero_manifesto'], f['rota'], 'Aberto',
             f['filial'], f['origem'], f['destino'],
             f['data_transmissao'], None, None
         ))
