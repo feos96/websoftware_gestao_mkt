@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Frotas{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h1 class="mb-4">Frotas</h1>
+
+  <div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Lista de Frotas</h5>
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#novoFrotasModal">
+        <i class="bi bi-plus-lg"></i> Nova Frota
+      </button>
+    </div>
+    <div class="card-body">
+      <div class="mb-3">
+        <input type="text" id="buscaFrotas" class="form-control" placeholder="Buscar por placa, frota ou modelo...">
+      </div>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Placa</th>
+              <th>Frota</th>
+              <th>Tipo</th>
+              <th>Modelo</th>
+              <th>Ano</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>ABC1234</td>
+              <td>001</td>
+              <td>Cavalo mecânico</td>
+              <td>Volvo FH440</td>
+              <td>2020</td>
+              <td><span class="badge bg-danger">Manutenção</span></td>
+              <td>
+                <button class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
+                <button class="btn btn-sm btn-outline-warning"><i class="bi bi-pencil"></i></button>
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>CBA4321</td>
+              <td>002</td>
+              <td>Implemento</td>
+              <td>Carga seca</td>
+              <td>2019</td>
+              <td><span class="badge bg-success">Operando</span></td>
+              <td>
+                <button class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
+                <button class="btn btn-sm btn-outline-warning"><i class="bi bi-pencil"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Nova Frota -->
+<div class="modal fade" id="novoFrotasModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cadastrar nova frota</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3"><label class="form-label">Placa</label><input type="text" class="form-control" required></div>
+          <div class="mb-3"><label class="form-label">Número de Frota</label><input type="text" class="form-control" required></div>
+          <div class="mb-3"><label class="form-label">Tipo</label><input type="text" class="form-control" required></div>
+          <div class="mb-3"><label class="form-label">Modelo</label><input type="text" class="form-control" required></div>
+          <div class="mb-3"><label class="form-label">Ano</label><input type="number" class="form-control" required min="1980" max="2099"></div>
+          <div class="mb-3"><label class="form-label">Status</label>
+            <select class="form-select">
+              <option value="Operando">Operando</option>
+              <option value="Manutenção">Manutenção</option>
+              <option value="Inativo">Inativo</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn btn-primary">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.getElementById('buscaFrotas').addEventListener('keyup', function () {
+    const valor = this.value.toLowerCase();
+    const linhas = document.querySelectorAll('tbody tr');
+    linhas.forEach(linha => {
+      linha.style.display = linha.textContent.toLowerCase().includes(valor) ? '' : 'none';
+    });
+  });
+</script>
+{% endblock %}

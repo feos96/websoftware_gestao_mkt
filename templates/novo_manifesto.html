@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Novo Manifesto{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Novo Manifesto</h2>
+<form method="post">
+  <div class="row mb-3">
+    <div class="col">
+      <label for="conjunto" class="form-label">Conjunto/Frota</label>
+      <input name="conjunto" id="conjunto" class="form-control" required>
+    </div>
+    <div class="col">
+      <label for="numero_manifesto" class="form-label">Número do Manifesto</label>
+      <input name="numero_manifesto" id="numero_manifesto" class="form-control" required>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col">
+      <label for="rota" class="form-label">Rota</label>
+      <input name="rota" id="rota" class="form-control" required>
+    </div>
+    <div class="col">
+      <label for="filial" class="form-label">Filial</label>
+      <input name="filial" id="filial" class="form-control" required>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col">
+      <label for="origem" class="form-label">Origem</label>
+      <input name="origem" id="origem" class="form-control" placeholder="Digite a cidade e UF" required>
+    </div>
+    <div class="col">
+      <label for="destino" class="form-label">Destino</label>
+      <input name="destino" id="destino" class="form-control" placeholder="Digite a cidade e UF" required>
+    </div>
+  </div>
+
+  <div class="mb-4">
+    <label for="data_transmissao" class="form-label">Data de Transmissão</label>
+    <input type="datetime-local" name="data_transmissao" id="data_transmissao" class="form-control" required>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Salvar</button>
+  <a href="{{ url_for('manifestos') }}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

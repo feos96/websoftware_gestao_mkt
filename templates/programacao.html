@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Nova Programação</h2>
+<form method="post" class="row g-2 mb-4">
+
+  <div class="col-md-4">
+    <label class="form-label">Motorista</label>
+    <select class="form-select" name="motorista" required>
+      <option value="">Selecione</option>
+      {% for m in motoristas %}
+        <option value="{{ m[0] }}">{{ m[1] }} - {{ m[2] }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Cavalo Mecânico</label>
+    <select class="form-select" name="cavalo" required>
+      <option value="">Selecione</option>
+      {% for cavalo in cavalos %}
+        <option value="{{ cavalo[0] }}">{{ cavalo[1] }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Implemento</label>
+    <select class="form-select" name="implemento" required>
+      <option value="">Selecione</option>
+      {% for implemento in implementos %}
+        <option value="{{ implemento[0] }}">{{ implemento[1] }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Data</label>
+    <input type="date" name="data" class="form-control" required>
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Origem</label>
+    <input type="text" name="origem" class="form-control" required>
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Destino</label>
+    <input type="text" name="destino" class="form-control" required>
+  </div>
+
+  <div class="col-12">
+    <label class="form-label">Observações</label>
+    <input type="text" name="obs" class="form-control">
+  </div>
+
+  <div class="col-12 mt-3">
+    <button class="btn btn-primary">Salvar e Enviar por WhatsApp</button>
+  </div>
+</form>
+{% endblock %}

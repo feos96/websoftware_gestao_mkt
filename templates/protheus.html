@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Abrindo Protheus...{% endblock %}
+
+{% block content %}
+<div class="container mt-4 text-center">
+  <h3>Abrindo o Protheus WebApp em nova aba...</h3>
+  <p>Caso a aba não abra automaticamente, <a href="https://makroengenharia187238.protheus.cloudtotvs.com.br:4010/webapp/" target="_blank" rel="noopener noreferrer">clique aqui</a>.</p>
+</div>
+
+<script>
+  window.onload = function() {
+    const url = "https://makroengenharia187238.protheus.cloudtotvs.com.br:4010/webapp/";
+    const novaAba = window.open(url, "_blank", "noopener,noreferrer");
+  };
+</script>
+{% endblock %}

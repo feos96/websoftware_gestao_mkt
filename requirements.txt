@@ -1,0 +1,6 @@
+flask
+pywhatkit
+gunicorn
+pandas
+openpyxl
+

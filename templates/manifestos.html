@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Manifestos{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Manifestos em Aberto</h2>
+  <a href="{{ url_for('novo_manifesto') }}" class="btn btn-primary">+ Novo Manifesto</a>
+</div>
+
+<div class="table-responsive mb-5">
+  <table class="table table-hover table-bordered">
+    <thead class="table-light">
+      <tr>
+        <th>Conjunto</th>
+        <th>Nº Manifesto</th>
+        <th>Rota</th>
+        <th>Filial</th>
+        <th>Origem</th>
+        <th>Destino</th>
+        <th>Data Transmissão</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for m in manifestos_abertos %}
+      <tr>
+        <td>{{ m.conjunto }}</td>
+        <td>{{ m.numero_manifesto }}</td>
+        <td>{{ m.rota }}</td>
+        <td>{{ m.filial }}</td>
+        <td>{{ m.origem }}</td>
+        <td>{{ m.destino }}</td>
+        <td>{{ m.data_transmissao }}</td>
+        <td>
+          <a href="{{ url_for('encerrar_manifesto', id=m.id) }}" class="btn btn-sm btn-danger" title="Encerrar Manifesto">
+            <i class="bi bi-x-circle"></i> Encerrar
+          </a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="8" class="text-center">Nenhum manifesto em aberto.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<h2>Histórico de Manifestos</h2>
+<div class="table-responsive">
+  <table class="table table-hover table-bordered">
+    <thead class="table-light">
+      <tr>
+        <th>Conjunto</th>
+        <th>Nº Manifesto</th>
+        <th>Rota</th>
+        <th>Filial</th>
+        <th>Origem</th>
+        <th>Destino</th>
+        <th>Data Transmissão</th>
+        <th>Data Encerramento</th>
+        <th>Encerrado Por</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for m in manifestos_encerrados %}
+      <tr>
+        <td>{{ m.conjunto }}</td>
+        <td>{{ m.numero_manifesto }}</td>
+        <td>{{ m.rota }}</td>
+        <td>{{ m.filial }}</td>
+        <td>{{ m.origem }}</td>
+        <td>{{ m.destino }}</td>
+        <td>{{ m.data_transmissao }}</td>
+        <td>{{ m.data_encerramento }}</td>
+        <td>{{ m.encerrado_por }}</td>
+        <td><span class="badge bg-secondary">{{ m.status }}</span></td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="10" class="text-center">Nenhum manifesto encerrado.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

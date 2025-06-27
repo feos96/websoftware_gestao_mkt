@@ -1,0 +1,93 @@
+.navbar-logo {
+  height: 90px !important;
+  max-height: 90px;
+  padding-left: 8px;
+  object-fit: contain;
+}
+
+/* Estilo para a tabela de frota */
+#frotaTable th {
+  background-color: #023f88;
+  color: white;
+}
+
+/* Estilo para o mapa */
+#map {
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Cards de dashboard */
+.dashboard-card {
+  transition: transform 0.3s;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Status badges */
+.badge-status-movimento {
+  background-color: #28a745;
+}
+
+.badge-status-parado {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.badge-status-problema {
+  background-color: #dc3545;
+}
+
+.badge-status-indisponivel {
+  background-color: #6c757d;
+}
+
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;  /* garante empilhamento vertical */
+  align-items: center;
+  justify-content: center;
+}
+
+
+.auth-card {
+  max-width: 540px;  /* maior que antes (420px) */
+  width: 100%;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+}
+
+.auth-logo {
+  max-width: 220px;
+  margin-bottom: 1rem;  /* diminui para subir */
+  margin-top: -20px;    /* sobe 20px */
+}
+
+.auth-card .form-control {
+  width: 100%;
+}
+
+.btn-danger {
+  background-color: #ed1a24;
+  border-color: #ed1a24;
+}
+
+a {
+  color: #94d8e8;
+}
+a:hover {
+  color: #003663;
+}
+
+.text-muted {
+  color: #939598 !important;
+}
+
+.nav-item.dropdown:hover .dropdown-menu {
+  display: block;
+  margin-top: 0;
+}

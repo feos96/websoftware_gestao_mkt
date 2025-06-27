@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Login - Sistema de Rastreamento{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+  <img src="{{ url_for('static', filename='logo.png') }}" class="auth-logo" alt="Logo Makro" style="max-width: 300px;">
+  <div class="auth-card">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} py-2 px-3 mb-3 small text-center" role="alert" style="font-size: 0.9rem;">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="/login">
+      <div class="mb-3">
+        <label class="form-label">E-mail</label>
+        <input type="email" class="form-control" name="email" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Senha</label>
+        <input type="password" class="form-control" name="senha" required>
+      </div>
+      <div class="mb-3 text-center">
+        <a href="#" class="small">Esqueceu a senha?</a>
+      </div>
+      <button type="submit" class="btn btn-primary w-100" style="background-color: #023f88;">Entrar</button>
+    </form>
+
+    <p class="text-center mt-3">
+      Não tem conta? <a href="/register">Cadastre-se</a>
+    </p>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Esconde alertas depois de 2 segundos
+  setTimeout(() => {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+      alert.classList.add('fade-out');
+      setTimeout(() => alert.remove(), 500);
+    });
+  }, 2000);
+</script>
+{% endblock %}

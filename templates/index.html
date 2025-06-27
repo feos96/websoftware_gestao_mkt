@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}Programação{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+  <div class="col-md-12">
+    <div class="card dashboard-card">
+      <div class="card-body text-center">
+        <h1 class="display-5">Bem-vindo ao Sistema de Gestão da Makro Transportes</h1>
+        <p class="lead">Controle completo e em tempo real</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Atalhos Mais Usados (dinâmicos) -->
+<div class="row" id="atalhos-mais-usados">
+  <!-- Cards gerados dinamicamente pelo JS -->
+</div>
+
+<!-- Programações do dia (fixo) -->
+<div class="row">
+  <div class="col-md-12">
+    <div class="card dashboard-card">
+      <div class="card-body">
+        <h5 class="card-title">
+          <i class="bi bi-calendar-event" style="font-size: 1rem; font-weight: bold;"></i>
+          Programações do dia
+        </h5>
+        <div class="table-responsive">
+          <table class="table table-hover" id="proximas-programacoes">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Conjunto</th>
+                <th>Motorista</th>
+                <th>Rota</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Dados preenchidos via JS -->
+            </tbody>
+          </table>
+        </div>
+        <a href="/programacao" class="btn btn-primary mt-3">Ver Todas</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const atalhosMaisUsados = [
+  {
+    titulo: 'Frotas',
+    descricao: 'Veículos em operação',
+    valor: '--',
+    icone: 'bi-truck-flatbed',
+    link: '/frotas'
+  },
+  {
+    titulo: 'Motoristas',
+    descricao: 'Profissionais ativos',
+    valor: '--',
+    icone: 'bi-people-fill',
+    link: '/motoristas'
+  },
+  {
+    titulo: 'Localização',
+    descricao: 'Localização das frotas',
+    valor: '--',
+    icone: 'bi-geo-alt-fill',
+    link: '/localizacao'
+  },
+  {
+  titulo: 'Manifestos',
+  descricao: 'Transportes em aberto',
+  valor: '--',
+  icone: 'bi-journal-text',
+  link: '/manifestos'
+  }
+];
+
+const programacoes = [
+  {
+    data: '25/06/2025',
+    conjunto: '785/891',
+    motorista: 'José A.',
+    rota: 'Fortaleza → Recife',
+    status: 'Confirmado'
+  },
+  {
+    data: '25/06/2025',
+    conjunto: '612/652',
+    motorista: 'Carla M.',
+    rota: 'Fortaleza → Natal',
+    status: 'Pendente'
+  }
+];
+
+function gerarCardAtalho(item) {
+  return `
+    <div class="col-md-4 mb-4">
+      <div class="card dashboard-card h-100">
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="bi ${item.icone}" style="font-size: 2rem; font-weight: bold;"></i> ${item.titulo}
+          </h5>
+          <h2 class="display-5">${item.valor}</h2>
+          <p class="card-text">${item.descricao}</p>
+          <a href="${item.link}" class="btn btn-primary">Ver Detalhes</a>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function loadDashboardData() {
+  // Renderizar os atalhos
+  const container = document.getElementById('atalhos-mais-usados');
+  container.innerHTML = atalhosMaisUsados.map(gerarCardAtalho).join('');
+
+  // Preencher programações do dia
+  const tabela = document.querySelector('#proximas-programacoes tbody');
+  tabela.innerHTML = programacoes.map(item => `
+    <tr>
+      <td>${item.data}</td>
+      <td>${item.conjunto}</td>
+      <td>${item.motorista}</td>
+      <td>${item.rota}</td>
+      <td><span class="badge ${item.status === 'Confirmado' ? 'bg-success' : 'bg-warning'}">${item.status}</span></td>
+    </tr>
+  `).join('');
+}
+
+document.addEventListener('DOMContentLoaded', loadDashboardData);
+</script>
+{% endblock %}

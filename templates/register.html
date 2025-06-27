@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Cadastro - Sistema de Rastreamento{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+  <img src="{{ url_for('static', filename='logo.png') }}" class="auth-logo" alt="Logo Makro" style="max-width: 300px;">
+  <div class="auth-card">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} py-2 px-3 mb-3 small text-center" role="alert" style="font-size: 0.9rem;">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="/register" onsubmit="return validarSenhas();">
+      <div class="mb-3">
+        <label class="form-label">Nome completo</label>
+        <input type="text" class="form-control" name="nome" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Matrícula</label>
+        <input type="text" class="form-control" name="matricula" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">E-mail</label>
+        <input type="email" class="form-control" name="email" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Senha</label>
+        <input type="password" class="form-control" name="senha" id="senha" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Confirme a senha</label>
+        <input type="password" class="form-control" name="confirmar_senha" id="confirmar_senha" required>
+      </div>
+      <button type="submit" class="btn btn-primary w-100" style="background-color: #023f88;">Cadastrar</button>
+    </form>
+
+    <p class="text-center mt-3">
+      Já tem conta? <a href="/login">Entrar</a>
+    </p>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function validarSenhas() {
+    const senha = document.getElementById('senha').value;
+    const confirmar = document.getElementById('confirmar_senha').value;
+    if (senha !== confirmar) {
+      alert('As senhas não coincidem!');
+      return false;
+    }
+    return true;
+  }
+
+  // Esconde alertas depois de 2 segundos
+  setTimeout(() => {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+      alert.classList.add('fade-out');
+      setTimeout(() => alert.remove(), 500);
+    });
+  }, 2000);
+</script>
+{% endblock %}
